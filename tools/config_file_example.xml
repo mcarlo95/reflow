@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<data>
+	<general_config>
+		<server_address>127.0.0.1</server_address>
+		<uid>user</uid>
+		<pwd>password</pwd>
+		<database>default</database>
+		<refresh_period_seconds>60</refresh_period_seconds>
+	</general_config>
+	
+	
+	<import_tables>
+		<table name="saldatrice1">
+			<source_directory>C:\ProgramData\ReflowImporter\test\test_logs</source_directory>
+			<destination_table>Saldatrice</destination_table>
+			<delimiter>\t</delimiter>
+			<field>
+				<column_name>BoardName</column_name>
+				<column_number>0</column_number>
+				<type>string</type>
+				<cast_string>True</cast_string>
+				<read_StartCharacter>0</read_StartCharacter>
+				<read_EndCharacter>5</read_EndCharacter>
+			</field>
+			<field>
+				<column_name>Boardtype</column_name>
+				<column_number>0</column_number>
+				<type>string</type>
+				<cast_string>True</cast_string>
+				<read_StartCharacter>0</read_StartCharacter>
+				<read_EndCharacter>5</read_EndCharacter>
+			</field>
+		</table>
+	</import_tables>
+</data>
