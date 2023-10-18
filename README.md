@@ -80,12 +80,12 @@ If the source file has a header, the first row must be skipped
 
 **type**: string,datetime,time,numeric,
 
-**cast_string**: True,False, (default False)<br>
-cast string is used to cut part of the full string. Example: "file20230201" can be cut form start_character 4 to end_character 8 in order to obtain string "2023"
+**cut_string**: True,False, (default False)<br>
+cut string is used to cut part of the full string. Example: "file20230201" can be cut form start_character 4 to end_character 8 in order to obtain string "2023"
 
-**read_StartCharacter**: 0,1,2...,
+**cut_StartCharacter**: 0,1,2...,
 
-**read_EndCharacter**: 5,6,7...,
+**cut_EndCharacter**: 5,6,7...,
 
 **univoque**: True,False, (default False)<br>
 not implemented yet, useful to check if this record already exist in the database

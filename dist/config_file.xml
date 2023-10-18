@@ -18,41 +18,41 @@
 				<column_name>ProductCode</column_name>
 				<column_number>0</column_number>
 				<type>string</type>
-				<cast_string>True</cast_string>
-				<read_StartCharacter>0</read_StartCharacter>
-				<read_EndCharacter>5</read_EndCharacter>
+				<cut_string>True</cut_string>
+				<cut_StartCharacter>0</cut_StartCharacter>
+				<cut_EndCharacter>5</cut_EndCharacter>
 			</field>
 			<field>
 				<column_name>OxygenLevel</column_name>
 				<column_number>27</column_number>
 				<type>numeric</type>
-				<cast_string>False</cast_string>
-				<read_StartCharacter>0</read_StartCharacter>
-				<read_EndCharacter>5</read_EndCharacter>
+				<cut_string>False</cut_string>
+				<cut_StartCharacter>0</cut_StartCharacter>
+				<cut_EndCharacter>5</cut_EndCharacter>
 			</field>
 			<field>
 				<column_name>Time</column_name>
 				<column_number>1</column_number>
 				<type>datetime</type>
-				<cast_string>False</cast_string>
-				<read_StartCharacter>0</read_StartCharacter>
-				<read_EndCharacter>5</read_EndCharacter>
+				<cut_string>False</cut_string>
+				<cut_StartCharacter>0</cut_StartCharacter>
+				<cut_EndCharacter>5</cut_EndCharacter>
 			</field>
 			<field>
 				<column_name>Number_of_boards</column_name>
 				<column_number>179</column_number>
 				<type>numeric</type>
-				<cast_string>False</cast_string>
-				<read_StartCharacter>0</read_StartCharacter>
-				<read_EndCharacter>5</read_EndCharacter>
+				<cut_string>False</cut_string>
+				<cut_StartCharacter>0</cut_StartCharacter>
+				<cut_EndCharacter>5</cut_EndCharacter>
 			</field>
 			<field>
 				<column_name>Date</column_name>
 				<column_number>221</column_number>
 				<type>date</type>
-				<cast_string>False</cast_string>
-				<read_StartCharacter>0</read_StartCharacter>
-				<read_EndCharacter>5</read_EndCharacter>
+				<cut_string>False</cut_string>
+				<cut_StartCharacter>0</cut_StartCharacter>
+				<cut_EndCharacter>5</cut_EndCharacter>
 			</field>
 		</table>
 	</import_tables>

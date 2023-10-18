@@ -1,7 +1,7 @@
 # REFLOW REport-FLOW import utility
 
 V = 1.0
-This is a python utility to track chenges to log files (industrial machine reports, tabular csv files) and upload filtered data to a SQL database.
+This is a python utility for monitoring a folder for changes in log files (csv, txt) and upload new data to a user database. Useful to build a datawarehouse with minimal data preprocessing included.
 
 ## File structure
 The file structure before and after install is the following:
@@ -60,17 +60,32 @@ The file structure before and after install is the following:
 	</import_tables>
 </data>
 ```
-Values for each field are the following:
+### Table properties are the following:
 
-```
-        "FIELD": [
-            {
-                column_name: column_name,
-                column_number: 0,1,2...
-                type: string,datetime,time,numeric,
-                cast_string:True,False, (default False)
-                read_StartCharacter:0,1,2...,
-                read_EndCharacter:5,6,7...,
-                univoque:True,False, (default False)
-            }
-```
+**source_directory**: [directory]
+
+**destination_table**: name of the table in the SQL database
+
+**delimiter**:<br>
+This is the default delimiter used in the file and can be any character as , ; \t (space)
+
+**header**: False, True (default false)<br>
+If the source file has a header, the first row must be skipped
+
+### Values for each field are the following:
+
+**column_name**: column_name
+
+**column_number**: 0,1,2...
+
+**type**: string,datetime,time,numeric,
+
+**cut_string**: True,False, (default False)<br>
+cut string is used to cut part of the full string. Example: "file20230201" can be cut form start_character 4 to end_character 8 in order to obtain string "2023"
+
+**cut_StartCharacter**: 0,1,2...,
+
+**cut_EndCharacter**: 5,6,7...,
+
+**univoque**: True,False, (default False)<br>
+not implemented yet, useful to check if this record already exist in the database

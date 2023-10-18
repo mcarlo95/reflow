@@ -144,9 +144,9 @@ def reflow_core():
         TF['column_name']=[column.find('column_name').text for column in fields.iter('field')]
         TF['column_number']=[int(column.find('column_number').text) for column in fields.iter('field')]
         TF['column_type']=[column.find('type').text for column in fields.iter('field')]
-        TF['cast_string']=[column.find('cast_string').text for column in fields.iter('field')]
-        TF['read_StartCharacter']=[int(column.find('read_StartCharacter').text) for column in fields.iter('field')]
-        TF['read_EndCharacter']=[int(column.find('read_EndCharacter').text) for column in fields.iter('field')]
+        TF['cast_string']=[column.find('cut_string').text for column in fields.iter('field')]
+        TF['read_StartCharacter']=[int(column.find('cut_StartCharacter').text) for column in fields.iter('field')]
+        TF['read_EndCharacter']=[int(column.find('cut_EndCharacter').text) for column in fields.iter('field')]
     
         #print(folder_index.attrib['name'])
         
