@@ -60,17 +60,32 @@ The file structure before and after install is the following:
 	</import_tables>
 </data>
 ```
-Values for each field are the following:
+### Table properties are the following:
 
-```
-        "FIELD": [
-            {
-                column_name: column_name,
-                column_number: 0,1,2...
-                type: string,datetime,time,numeric,
-                cast_string:True,False, (default False)
-                read_StartCharacter:0,1,2...,
-                read_EndCharacter:5,6,7...,
-                univoque:True,False, (default False)
-            }
-```
+**source_directory**: [directory]
+
+**destination_table**: name of the table in the SQL database
+
+**delimiter**:<br>
+This is the default delimiter used in the file and can be any character as , ; \t (space)
+
+**header**: False, True (default false)<br>
+If the source file has a header, the first row must be skipped
+
+### Values for each field are the following:
+
+**column_name**: column_name
+
+**column_number**: 0,1,2...
+
+**type**: string,datetime,time,numeric,
+
+**cast_string**: True,False, (default False)<br>
+cast string is used to cut part of the full string. Example: "file20230201" can be cut form start_character 4 to end_character 8 in order to obtain string "2023"
+
+**read_StartCharacter**: 0,1,2...,
+
+**read_EndCharacter**: 5,6,7...,
+
+**univoque**: True,False, (default False)<br>
+not implemented yet, useful to check if this record already exist in the database
