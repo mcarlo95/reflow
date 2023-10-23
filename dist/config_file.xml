@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <data>
+	<test_mode>True</test_mode>
 	<general_config>
 		<server_address>127.0.0.1</server_address>
 		<uid>DefaultUser</uid>
