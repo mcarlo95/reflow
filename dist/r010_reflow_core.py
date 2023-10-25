@@ -44,6 +44,7 @@ def print_and_log(textmessage):
     logging.info(textmessage)
     #print(textmessage)
     text.insert('end',textmessage)
+    text.insert('end',"\n")
     text.pack()
     win.update_idletasks()
     win.update()
@@ -63,7 +64,6 @@ def reflow_core():
     
     NewTime=datetime.now()
     print_and_log(NewTime)
-    print_and_log(NewTime,text)
 
     #import database fields
     
