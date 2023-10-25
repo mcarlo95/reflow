@@ -31,8 +31,8 @@ print(r"Do you want to install the files in C:\ProgramData\ReflowImporter (Y/N)?
 if input()!='Y':
     exit()
 
-install_files=['r010_reflow_core.py', 'r011_reflow_interface.py', 'etc\\favicon.ico', 'README.md', 'config_file.xml', 'test\\ /E', 'launch_reflow_service.cmd']
-update_files=['r010_reflow_core.py', 'r011_reflow_interface.py', 'etc\\favicon.ico', 'README.md', 'test\\ /E', 'launch_reflow_service.cmd']
+install_files=['r010_reflow_core.py', 'r011_reflow_interface.py', 'folders\\ /E', 'README.md', 'config_file.xml', 'launch_reflow_service.cmd']
+update_files=['r010_reflow_core.py', 'r011_reflow_interface.py', 'folders\\ /E', 'README.md', 'launch_reflow_service.cmd']
 
 print("installing packages:")
 install_and_import('subprocess')

@@ -38,11 +38,15 @@ def show_window(icon, item):
    icon.stop()
    win.after(0,win.deiconify())
 
+def info_window(icon, item):
+   import webbrowser
+   webbrowser.open_new("github.com/mcarlo95/reflow/")
+
 # Hide the window and show on the system taskbar
 def hide_window():
    win.withdraw()
    image=Image.open("etc/favicon.ico")
-   menu=(item('Quit', quit_window), item('Show', show_window))
+   menu=(item('Quit', quit_window), item('Info', info_window), item('Show', show_window))
    icon=pystray.Icon("name", image, "Reflow importer running", menu)
    icon.run()
 

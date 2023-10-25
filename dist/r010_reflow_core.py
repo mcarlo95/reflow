@@ -233,7 +233,7 @@ def reflow_core():
                 data.to_html(buf='__table_dump__/Buf_'+folder_index.attrib['name']+r'_table.html')
 
             ######## UPLOAD TO DATABASE
-            print_and_log("uplading to database...",end=" ")
+            print_and_log("uplading to database...")
             #print_and_log(folder_index.find('destination_table').text)
             #print_and_log(data)
             try:
