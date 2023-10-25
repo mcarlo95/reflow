@@ -51,9 +51,9 @@ The file structure before and after install is the following:
 				<column_name>BoardName</column_name>
 				<column_number>0</column_number>
 				<type>string</type>
-				<cast_string>True</cast_string>
-				<read_StartCharacter>0</read_StartCharacter>
-				<read_EndCharacter>5</read_EndCharacter>
+				<cut_string>True</cut_string>
+				<cut_StartCharacter>0</cut_StartCharacter>
+				<cut_EndCharacter>5</cut_EndCharacter>
 			</field>
 
 		</table>
