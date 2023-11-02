@@ -157,22 +157,40 @@ def reflow_core():
         logging.info("file found: ".join(filenames))
         print_and_log("New files to import: {0}".format(len(filepaths)))
 
+        #function to find the values of fields inside xml, with also a default value fallback
+        def get_properties(fields,find,default):
+            Arr=[]
+            for column in fields.iter('field'):
+                try: Arr.append(column.find(find).text)
+                except: Arr.append(default)
+            return Arr
+        
+
         #get details about fields that must be imported
         TF=pandas.DataFrame()
         fields=folder_index
         TF['column_name']=[column.find('column_name').text for column in fields.iter('field')]
         TF['column_number']=[int(column.find('column_number').text) for column in fields.iter('field')]
         TF['column_type']=[column.find('type').text for column in fields.iter('field')]
-        TF['cast_string']=[column.find('cut_string').text for column in fields.iter('field')]
-        TF['read_StartCharacter']=[int(column.find('cut_StartCharacter').text) for column in fields.iter('field')]
-        TF['read_EndCharacter']=[int(column.find('cut_EndCharacter').text) for column in fields.iter('field')]
+        TF['column_type_format']=[column.find('type').attrib for column in fields.iter('field')]
+        TF['cast_string']=get_properties(fields,'cut_string','False')
+        TF['read_StartCharacter']=[int(v) for v in get_properties(fields,'cut_StartCharacter','')]
+        TF['read_EndCharacter']=[int(v) for v in get_properties(fields,'cut_EndCharacter','')]
+        TF['export_to_sql']=get_properties(fields,'export_to_sql','True')
+        
+
+        if DEBUGMODE1:
+            TF.to_html(buf='__table_dump__/Buf_'+folder_index.attrib['name']+r"_structure.html")
     
-        #print_and_log(folder_index.attrib['name'])
+        #0211 SPECIAL COLUMN FILENAME THAT COLLECT THE FILE NAME
+        df2 = pandas.DataFrame(columns=TF.columns)
+        rows = TF.loc[TF['column_number']==-1, :]
+        df2 = rows
+        TF.drop(rows.index, inplace=True)
         
         #order by column number
         TF=TF.sort_values(by=['column_number'])
-        if DEBUGMODE1:
-            TF.to_html(buf='__table_dump__/Buf_'+folder_index.attrib['name']+r"_structure.html")
+
 
         ######## IMPORT EACH FILE
         for FileName in filenames:
@@ -203,16 +221,21 @@ def reflow_core():
             logging.info("{0} righe importate".format(data.shape[0]))
             print_and_log("{0} righe importate: {1}".format(data.shape[0],FileName))
 
-            ######## POSTPROCESSING OF COLUMNS
+            #0211 INSERT AGAIN INTO DATA THE FILE NAME IF THERE IS A FILENAME COLUMN
+            #print(df2)
+            TF1 = pandas.concat([TF,df2])
+            if (df2['column_name'].tolist()!=[]):
+                data[df2['column_name'].tolist()[0]]=[FileName]*len(data)
+            
+            ######## FORMATTING OF COLUMNS
             print_and_log("processing columns")
             for column in data:
                 #postprocesso
-                actTF=TF[TF['column_name']==column]
+                actTF=TF1[TF1['column_name']==column]
                 
                 #taglia stringa
                 if actTF['cast_string'].item()=='True':
                     data[column]=data[column].astype(str).str[actTF['read_StartCharacter'].item():actTF['read_EndCharacter'].item()]
-                pass
 
                 #tipo stringa
                 if actTF['column_type'].item()=='string':
@@ -220,19 +243,47 @@ def reflow_core():
 
                 #tipo:datetime
                 if actTF['column_type'].item()=='datetime':
-                    data[column]=pandas.to_datetime(data[column])
+                    if 'format' in actTF['column_type_format'].item():
+                        data[column]=pandas.to_datetime(data[column],format=actTF['column_type_format'].item()['format'])
+                    else:
+                        data[column]=pandas.to_datetime(data[column])
                 
                 #tipo:date
                 if actTF['column_type'].item()=='date':
-                    data[column]=pandas.to_datetime(data[column])
+                    if f'format' in actTF['column_type_format'].item():
+                        data[column]=pandas.to_datetime(data[column],format=actTF['column_type_format'].item()['format'])
+                    else:
+                        data[column]=pandas.to_datetime(data[column])
                 
                 #tipo:time
                 if actTF['column_type'].item()=='time':
-                    data[column]=pandas.to_datetime(data[column])
+                    if 'format' in actTF['column_type_format'].item():
+                        data[column]=pandas.to_timedelta(data[column],format=actTF['column_type_format'].item()['format'])
+                    else:
+                        data[column]=pandas.to_timedelta(data[column])
 
                 #tipo:numeric
                 if actTF['column_type'].item()=='numeric':
                     data[column]=pandas.to_numeric(data[column])
+
+            ######## POSTPROCESSING OF COLUMNS
+            #custom functions
+            for column in fields.iter('postprocess'):
+
+                #combined date+time
+                if column.find('function').text=="combine_date_time":
+                    newrow=pandas.DataFrame([{'column_name':column.find('parameter1').text,'column_type':'datetime','export_to_sql':'True'}])#insert new row description
+                    TF1=pandas.concat([TF1,newrow])
+                    data[column.find('parameter1').text]=pandas.to_datetime(data[column.find('parameter2').text] + data[column.find('parameter3').text])
+                    print(newrow.to_string())
+
+            ####### FILTER OUT FIELDS export_to_sql==false
+            if DEBUGMODE1:
+                TF1.to_html(buf='__table_dump__/Buf_'+folder_index.attrib['name']+r"_structure.html")
+            #print(TF1.to_string())
+            data=data.filter(TF1[TF1['export_to_sql']!='False']['column_name'])
+            #print(data.to_string())
+
 
             #log data table
             if DEBUGMODE1:
@@ -242,7 +293,6 @@ def reflow_core():
             print_and_log("uplading to database...")
             #print_and_log(folder_index.find('destination_table').text)
             #print_and_log(data)
-            data.to_sql(name=folder_index.find('destination_table').text, con=dbconnection, index=False, if_exists='append')
 
             try:
                 data.to_sql(name=folder_index.find('destination_table').text, con=dbconnection, index=False, if_exists='append')
