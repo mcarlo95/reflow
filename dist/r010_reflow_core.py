@@ -26,7 +26,8 @@ from r011_reflow_interface import win as win
 tree = ET.parse('config_file.xml')
 root = tree.getroot()
 
-DEBUGMODE1=True
+DEBUGMODE1=False
+if root.find('test_mode').text.upper()=="TRUE": DEBUGMODE1=True
 if DEBUGMODE1:
     try: os.mkdir("__table_dump__")
     except FileExistsError:
@@ -84,7 +85,10 @@ def reflow_core():
         host=Host,
         database=Database,
     )
-    dbconnection = create_engine(url_object)
+    try:
+        dbconnection = create_engine(url_object)
+    except:
+        print_and_log('Database connection error')
 
     #create virtual database in debug mode
     if DEBUGMODE1:
@@ -219,6 +223,8 @@ def reflow_core():
                     data[column]=pandas.to_datetime(data[column])
                 
                 #tipo:date
+                if actTF['column_type'].item()=='date':
+                    data[column]=pandas.to_datetime(data[column])
                 
                 #tipo:time
                 if actTF['column_type'].item()=='time':
@@ -236,10 +242,14 @@ def reflow_core():
             print_and_log("uplading to database...")
             #print_and_log(folder_index.find('destination_table').text)
             #print_and_log(data)
+            data.to_sql(name=folder_index.find('destination_table').text, con=dbconnection, index=False, if_exists='append')
+
             try:
                 data.to_sql(name=folder_index.find('destination_table').text, con=dbconnection, index=False, if_exists='append')
             except 2003:
                 print_and_log("conenction failed")
+            except:
+                print_and_log("other error")
             else:
                 print_and_log("successful")
                 #update number of read lines
@@ -262,7 +272,7 @@ refresh_interval=int(root.find('general_config').find('refresh_period_seconds').
 #print_and_log("ciao",text)
 
 #run script 1 time
-#reflow_core()
+reflow_core()
 
 
 ##create scheduler and run script every n-sec
