@@ -7,6 +7,7 @@ from PIL import Image, ImageTk
 # Create an instance of tkinter frame or window
 win=Tk()
 win.title("Reflow importer")
+win.iconbitmap("etc/favicon.ico")
 
 # Set the size of the window
 win.geometry("400x350")
