@@ -89,3 +89,5 @@ cut string is used to cut part of the full string. Example: "file20230201" can b
 
 **univoque**: True,False, (default False)<br>
 not implemented yet, useful to check if this record already exist in the database
+
+**format**: refer to https://docs.python.org/3/library/datetime.html#format-codes
