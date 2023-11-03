@@ -85,16 +85,20 @@ def reflow_core():
         host=Host,
         database=Database,
     )
-    try:
-        dbconnection = create_engine(url_object)
-    except:
-        print_and_log('Database connection error')
+
+
 
     #create virtual database in debug mode
     if DEBUGMODE1:
         print_and_log('Debug ON: simulating database')
         from sqlalchemy import create_engine
         dbconnection = create_engine('sqlite:///:memory:', echo=False)
+    else:
+        try:
+            dbconnection = create_engine(url_object)
+        except:
+            print_and_log('Database connection error')
+        
 
     ######## START IMPORT PROCEDURE, TABLE FOR TABLE
         
@@ -173,7 +177,7 @@ def reflow_core():
         TF['column_number']=[int(column.find('column_number').text) for column in fields.iter('field')]
         TF['column_type']=[column.find('type').text for column in fields.iter('field')]
         TF['column_type_format']=[column.find('type').attrib for column in fields.iter('field')]
-        TF['cast_string']=get_properties(fields,'cut_string','False')
+        TF['cast_string']=get_properties(fields,'cut_string',"Ciao")
         TF['read_StartCharacter']=[int(v) for v in get_properties(fields,'cut_StartCharacter',0)]
         TF['read_EndCharacter']=[int(v) for v in get_properties(fields,'cut_EndCharacter',0)]
         TF['export_to_sql']=get_properties(fields,'export_to_sql','True')
@@ -244,30 +248,30 @@ def reflow_core():
                 actTF=TF1[TF1['column_name']==column]
                 
                 #taglia stringa
-                if actTF['cast_string'].item()=='True':
+                if actTF['cast_string'].iloc[0]=='True':
                     data[column]=data[column].astype(str).str[actTF['read_StartCharacter'].item():actTF['read_EndCharacter'].item()]
 
                 #tipo stringa
-                if actTF['column_type'].item()=='string':
+                if actTF['column_type'].iloc[0]=='string':
                     data[column]=data[column].astype(str)
 
                 #tipo:datetime
-                if actTF['column_type'].item()=='datetime':
-                    if 'format' in actTF['column_type_format'].item():
+                if actTF['column_type'].iloc[0]=='datetime':
+                    if 'format' in actTF['column_type_format'].iloc[0]:
                         data[column]=pandas.to_datetime(data[column],format=actTF['column_type_format'].item()['format'])
                     else:
                         data[column]=pandas.to_datetime(data[column])
                 
                 #tipo:date
-                if actTF['column_type'].item()=='date':
-                    if f'format' in actTF['column_type_format'].item():
+                if actTF['column_type'].iloc[0]=='date':
+                    if f'format' in actTF['column_type_format'].iloc[0]:
                         data[column]=pandas.to_datetime(data[column],format=actTF['column_type_format'].item()['format'])
                     else:
                         data[column]=pandas.to_datetime(data[column])
                 
                 #tipo:time
-                if actTF['column_type'].item()=='time':
-                    if 'format' in actTF['column_type_format'].item():
+                if actTF['column_type'].iloc[0]=='time':
+                    if 'format' in actTF['column_type_format'].iloc[0]:
                         data[column]=pandas.to_timedelta(data[column],format=actTF['column_type_format'].item()['format'])
                     else:
                         data[column]=pandas.to_timedelta(data[column])
