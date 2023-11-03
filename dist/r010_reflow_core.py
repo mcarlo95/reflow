@@ -174,8 +174,8 @@ def reflow_core():
         TF['column_type']=[column.find('type').text for column in fields.iter('field')]
         TF['column_type_format']=[column.find('type').attrib for column in fields.iter('field')]
         TF['cast_string']=get_properties(fields,'cut_string','False')
-        TF['read_StartCharacter']=[int(v) for v in get_properties(fields,'cut_StartCharacter','')]
-        TF['read_EndCharacter']=[int(v) for v in get_properties(fields,'cut_EndCharacter','')]
+        TF['read_StartCharacter']=[int(v) for v in get_properties(fields,'cut_StartCharacter',0)]
+        TF['read_EndCharacter']=[int(v) for v in get_properties(fields,'cut_EndCharacter',0)]
         TF['export_to_sql']=get_properties(fields,'export_to_sql','True')
         
 
@@ -190,7 +190,10 @@ def reflow_core():
         
         #order by column number
         TF=TF.sort_values(by=['column_number'])
-
+        dpcTF=TF.loc[TF['column_number'].duplicated(),:]
+        TFu=TF.drop_duplicates(subset=['column_number'],keep='first')
+        #print(dpcTF)
+        
 
         ######## IMPORT EACH FILE
         for FileName in filenames:
@@ -216,10 +219,17 @@ def reflow_core():
                 continue
 
             #Import csv
-            data = pandas.read_csv(Filepath,sep=delimiter,engine="python",skiprows=skipRows,usecols=TF['column_number'].tolist(),names=TF['column_name'],header=header_csv)
+            data = pandas.read_csv(Filepath,sep=delimiter,engine="python",skiprows=skipRows,usecols=TFu['column_number'].tolist(),names=TFu['column_name'],header=header_csv)
             #describe new quantity of read data
             logging.info("{0} righe importate".format(data.shape[0]))
             print_and_log("{0} righe importate: {1}".format(data.shape[0],FileName))
+
+            #RECALL COLUMNS WITH DUPLICATED column_number
+            for index, row in dpcTF.iterrows():
+                colnam=TFu[TFu['column_number']==row['column_number']]['column_name']
+                #print(colnam)
+                data[row['column_name']]=data.loc[:,colnam]
+                #print(data.to_string())
 
             #0211 INSERT AGAIN INTO DATA THE FILE NAME IF THERE IS A FILENAME COLUMN
             #print(df2)
