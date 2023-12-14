@@ -91,3 +91,14 @@ cut string is used to cut part of the full string. Example: "file20230201" can b
 not implemented yet, useful to check if this record already exist in the database
 
 **format**: refer to https://docs.python.org/3/library/datetime.html#format-codes
+
+**source_timezone**: only for datetime type, specifies the reference timezone code of the data imported (default: CET)
+
+**destination_timezone**: only for datetime type, specifies the output timezone to convert the datetime (default: UTC)
+
+**export_to_sql**: (True,False)(default:true) if this value if False then the column is not exported into database 
+
+## Disclaimer
+**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
+
+---

@@ -181,6 +181,10 @@ def reflow_core():
         TF['read_StartCharacter']=[int(v) for v in get_properties(fields,'cut_StartCharacter',0)]
         TF['read_EndCharacter']=[int(v) for v in get_properties(fields,'cut_EndCharacter',0)]
         TF['export_to_sql']=get_properties(fields,'export_to_sql','True')
+        TF['destination_timezone']=get_properties(fields,'destination_timezone','UTC')
+        TF['source_timezone']=get_properties(fields,'source_timezone','CET')
+        
+        
         
 
         if DEBUGMODE1:
@@ -235,7 +239,7 @@ def reflow_core():
                 data[row['column_name']]=data.loc[:,colnam]
                 #print(data.to_string())
 
-            #0211 INSERT AGAIN INTO DATA THE FILE NAME IF THERE IS A FILENAME COLUMN
+            #0211 INSERT AGAIN INTO DATA THE FILE NAME IF THERE IS A FILENAME COLUMN df2
             #print(df2)
             TF1 = pandas.concat([TF,df2])
             if (df2['column_name'].tolist()!=[]):
@@ -258,9 +262,9 @@ def reflow_core():
                 #tipo:datetime
                 if actTF['column_type'].iloc[0]=='datetime':
                     if 'format' in actTF['column_type_format'].iloc[0]:
-                        data[column]=pandas.to_datetime(data[column],format=actTF['column_type_format'].item()['format'])
+                        data[column]=pandas.to_datetime(data[column],format=actTF['column_type_format'].item()['format']).dt.tz_localize(source_timezone).dt.tz_convert(destination_timezone)
                     else:
-                        data[column]=pandas.to_datetime(data[column])
+                        data[column]=pandas.to_datetime(data[column]).dt.tz_localize(source_timezone).dt.tz_convert(destination_timezone)
                 
                 #tipo:date
                 if actTF['column_type'].iloc[0]=='date':

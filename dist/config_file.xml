@@ -54,6 +54,8 @@
 				<cut_string>False</cut_string>
 				<cut_StartCharacter>0</cut_StartCharacter>
 				<cut_EndCharacter>5</cut_EndCharacter>
+				<source_timezone>UTC</source_timezone>
+				<destination_timezone>UTC</destination_timezone>
 			</field>
 		</table>
 	</import_tables>

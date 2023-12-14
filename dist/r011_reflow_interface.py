@@ -49,7 +49,7 @@ def hide_window():
    image=Image.open("etc/favicon.ico")
    menu=(item('Quit', quit_window), item('Info', info_window), item('Show', show_window))
    icon=pystray.Icon("name", image, "Reflow importer running", menu)
-   icon.run()
+   icon.run_detached()
 
 win.protocol('WM_DELETE_WINDOW', hide_window)
 
