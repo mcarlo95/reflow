@@ -18,9 +18,72 @@ from sqlalchemy import URL
 
 from sqlalchemy import create_engine
 
-import r011_reflow_interface
-from r011_reflow_interface import text as text
-from r011_reflow_interface import win as win
+##import r011_reflow_interface
+##from r011_reflow_interface import text as text
+##from r011_reflow_interface import win as win
+################################################################################
+## INTERFACE
+################################################################################
+# Import the required libraries
+from tkinter import *
+from pystray import MenuItem as item
+import pystray
+from PIL import Image, ImageTk
+
+# Create an instance of tkinter frame or window
+win=Tk()
+win.title("Reflow importer")
+win.iconbitmap("etc/favicon.ico")
+
+# Set the size of the window
+win.geometry("400x350")
+
+
+# Add a Scrollbar(horizontal)
+v=Scrollbar(win, orient='vertical')
+v.pack(side=RIGHT, fill='y')
+
+# Add a text widget
+text=Text(win, font=("Arial, 8"), yscrollcommand=v.set)
+
+# Add some text in the text widget
+##for i in range(10):
+##   text.insert(END, "Welcome to Tutorialspoint...\n")
+##   text.pack()
+
+# Attach the scrollbar with the text widget
+v.config(command=text.yview)
+#text.pack()
+
+# Define a function for quit the window
+def quit_window(icon, item):
+   icon.stop()
+   win.destroy()
+
+# Define a function to show the window again
+def show_window(icon, item):
+   icon.stop()
+   win.after(0,win.deiconify())
+
+def info_window(icon, item):
+   import webbrowser
+   webbrowser.open_new("github.com/mcarlo95/reflow/")
+
+# Hide the window and show on the system taskbar
+def hide_window():
+   win.withdraw()
+   image=Image.open("etc/favicon.ico")
+   menu=(item('Quit', quit_window), item('Info', info_window), item('Show', show_window))
+   icon=pystray.Icon("name", image, "Reflow importer running", menu)
+   icon.run_detached()
+
+win.protocol('WM_DELETE_WINDOW', hide_window)
+
+win.update_idletasks()
+win.update()
+##
+#win.mainloop()
+###########################################################################################
 
 
 tree = ET.parse('config_file.xml')
@@ -264,8 +327,7 @@ def reflow_core():
                     if 'format' in actTF['column_type_format'].iloc[0]:
                         data[column]=pandas.to_datetime(data[column],format=actTF['column_type_format'].item()['format']).dt.tz_localize(source_timezone).dt.tz_convert(destination_timezone)
                     else:
-                        data[column]=pandas.to_datetime(data[column]).dt.tz_localize(source_timezone).dt.tz_convert(destination_timezone)
-                
+                        data[column]=pandas.to_datetime(data[column]).dt.tz_localize(actTF['source_timezone'].item()).dt.tz_convert(actTF['destination_timezone'].item())                
                 #tipo:date
                 if actTF['column_type'].iloc[0]=='date':
                     if f'format' in actTF['column_type_format'].iloc[0]:
